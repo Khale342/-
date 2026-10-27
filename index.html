@@ -2,124 +2,577 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>طلباتي | خدمات توصيل الطلبات</title>
-<style>
-*{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:#f3f7f3;color:#222;line-height:1.7}
-header{background:#168447;color:white;text-align:center;padding:25px 15px}
-header h1{margin:0;font-size:30px}
-header p{margin:8px 0 0}
-main{max-width:650px;margin:22px auto;padding:0 12px}
-.card{background:white;padding:20px;border-radius:14px;box-shadow:0 3px 14px #00000010;margin-bottom:18px}
-h2{color:#168447;margin-top:0;font-size:21px}
-label{display:block;font-weight:bold;margin:13px 0 5px}
-input,textarea,select{width:100%;padding:12px;border:1px solid #ccc;border-radius:8px;font:inherit;background:white}
-textarea{min-height:85px;resize:vertical}
-button{font:inherit;border:0;border-radius:9px;padding:12px 16px;cursor:pointer}
-.add{background:#e2f4e8;color:#116b38;width:100%;margin-top:12px}
-.remove{background:#ffe8e8;color:#a32121;margin-top:10px}
-.submit{background:#168447;color:white;width:100%;margin-top:18px;font-weight:bold}
-.shop{border:1px solid #d8e8dc;padding:15px;border-radius:12px;margin-top:14px}
-.shop h3{margin:0;color:#168447}
-.note{font-size:14px;color:#666}
-footer{text-align:center;color:#666;padding:20px}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>طلباتي | خدمات توصيل الطلبات</title>
+  <style>
+    *{box-sizing:border-box}
+    body{margin:0;background:#f3f6f4;color:#20352b;font-family:Arial,sans-serif;line-height:1.7}
+    header{background:#176b48;color:white;padding:22px 16px;text-align:center}
+    header h1{margin:0;font-size:29px}
+    header p{margin:5px 0 0}
+    main{max-width:760px;margin:20px auto;padding:0 12px}
+    .card{background:white;padding:18px;margin-bottom:16px;border-radius:14px;box-shadow:0 3px 14px #0000000b}
+    h2{font-size:20px;margin:0 0 12px}
+    label{display:block;font-weight:bold;margin:10px 0 5px}
+    input,textarea,select,button{font:inherit;width:100%;padding:11px;border-radius:8px}
+    input,textarea,select{border:1px solid #ccd8d0;background:white;color:#20352b}
+    textarea{min-height:85px;resize:vertical}
+    button{border:0;background:#176b48;color:white;font-weight:bold;cursor:pointer;margin-top:10px}
+    button.secondary{background:#e5efe9;color:#176b48}
+    button.danger{background:#a83232}
+    .shop{border:1px solid #dce6df;border-radius:10px;padding:12px;margin:12px 0}
+    .muted{color:#63746a;font-size:14px}
+    .hidden{display:none!important}
+    .status{display:inline-block;background:#e5efe9;color:#176b48;padding:3px 10px;border-radius:20px;font-size:13px}
+    .order{border:1px solid #dce6df;border-radius:10px;padding:12px;margin:12px 0}
+    .message{background:#edf5ef;padding:9px 12px;border-radius:10px;margin:8px 0;overflow-wrap:anywhere}
+    .message.mine{background:#dceee2}
+    .error{color:#b42318;white-space:pre-wrap}
+    .success{color:#176b48;white-space:pre-wrap}
+    .row{display:flex;gap:8px;align-items:center}
+    .row>*{flex:1;min-width:0}
+    hr{border:0;border-top:1px solid #e3e9e5;margin:16px 0}
+    footer{text-align:center;padding:20px;color:#63746a;font-size:13px}
+  </style>
 </head>
 <body>
 <header>
-<h1>🛍️ طلباتي</h1>
-<p>اطلب احتياجاتك من محلات قريتك وإحنا نتواصل معاك</p>
+  <h1>طلباتي 🛵</h1>
+  <p>اطلب احتياجاتك من محلات قريتك بكل سهولة</p>
 </header>
 
 <main>
-<div class="card">
-<h2>📝 بيانات الطلب</h2>
-<p class="note">اكتب اللي محتاجه، وحدد المحل. تقدر تطلب من أكتر من محل في نفس الطلب.</p>
+  <section class="card" id="authCard">
+    <h2 id="authTitle">تسجيل الدخول</h2>
+    <p class="muted">سجّل دخولك لمتابعة طلباتك والتواصل بشكل خاص.</p>
 
-<form id="orderForm">
-<div id="shops"></div>
-<button type="button" class="add" id="addShop">＋ إضافة طلب من محل آخر</button>
+    <div id="signupFields" class="hidden">
+      <label for="username">اسم المستخدم</label>
+      <input id="username" autocomplete="username" maxlength="30"
+        placeholder="اكتب اسم المستخدم">
+    </div>
 
-<label for="delivery">عنوان التوصيل بالتفصيل</label>
-<textarea id="delivery" required placeholder="اسم القرية، المنطقة، أقرب علامة مميزة..."></textarea>
+    <label for="email">البريد الإلكتروني</label>
+    <input id="email" type="email" autocomplete="email"
+      placeholder="name@example.com">
 
-<label for="phone">رقم الموبايل للتواصل</label>
-<input id="phone" type="tel" required placeholder="اكتب رقم موبايلك">
+    <label for="password">كلمة المرور</label>
+    <input id="password" type="password" autocomplete="current-password"
+      minlength="8" placeholder="8 أحرف على الأقل">
 
-<label for="notes">ملاحظات إضافية (اختياري)</label>
-<textarea id="notes" placeholder="أي تفاصيل تساعدنا نوصل طلبك"></textarea>
+    <button id="authButton" type="button">دخول</button>
+    <button class="secondary" id="toggleAuth" type="button">إنشاء حساب جديد</button>
+    <button class="secondary hidden" id="resetButton" type="button">تسجيل الخروج</button>
+    <p id="authNotice" aria-live="polite"></p>
+  </section>
 
-<label for="payment">طريقة الدفع المفضلة</label>
-<select id="payment" required>
-<option value="">اختر طريقة الدفع</option>
-<option value="cash">كاش عند الاستلام</option>
-<option value="vodafone">فودافون كاش</option>
-</select>
+  <section id="app" class="hidden">
+    <section class="card">
+      <div class="row">
+        <div>
+          <h2>أهلًا بيك 👋</h2>
+          <p class="muted" id="welcome"></p>
+        </div>
+        <button class="secondary" id="logout" type="button">خروج</button>
+      </div>
+    </section>
 
-<p class="note">بعد استلام طلبك، هنتواصل معاك لتحديد السعر والاتفاق على تكلفة التوصيل قبل تأكيد الطلب.</p>
-<button type="submit" class="submit">إرسال الطلب</button>
-</form>
-</div>
+    <section class="card" id="newOrderCard">
+      <h2>🛒 اعمل طلب جديد</h2>
+      <p class="muted">اكتب كل احتياجاتك. تقدر تضيف طلبات من أكتر من محل.</p>
 
-<div class="card">
-<h2>🔒 خصوصية طلبك</h2>
-<p>بياناتك مش المفروض تكون ظاهرة للعملاء الآخرين. قبل استقبال طلبات حقيقية، هنحتاج نربط الصفحة بخدمة آمنة لحفظ الطلبات والتواصل الخاص.</p>
-</div>
+      <form id="orderForm">
+        <div id="shops">
+          <div class="shop">
+            <label>تفاصيل الطلب من المحل</label>
+            <textarea class="items" required maxlength="3000"
+              placeholder="مثال: ٢ كارت شحن فودافون بـ١٥ جنيه"></textarea>
+            <label>اسم المحل</label>
+            <input class="shopName" required maxlength="150"
+              placeholder="اسم المحل">
+            <label>عنوان المحل</label>
+            <input class="shopAddress" required maxlength="300"
+              placeholder="عنوان المحل أو وصف مكانه">
+          </div>
+        </div>
+
+        <button class="secondary" id="addShop" type="button">
+          + إضافة طلب من محل آخر
+        </button>
+
+        <label for="deliveryAddress">عنوان التوصيل</label>
+        <textarea id="deliveryAddress" required maxlength="500"
+          placeholder="القرية والشارع وأقرب علامة مميزة"></textarea>
+
+        <label for="notes">ملاحظات إضافية (اختياري)</label>
+        <textarea id="notes" maxlength="1000"
+          placeholder="أي تفاصيل تساعد في تجهيز الطلب"></textarea>
+
+        <label for="payment">طريقة الدفع</label>
+        <select id="payment" required>
+          <option value="cash">كاش عند الاستلام</option>
+          <option value="vodafone">فودافون كاش</option>
+        </select>
+        <p class="muted" id="paymentNote">
+          هنتفق على السعر والتفاصيل في المحادثة الخاصة قبل تأكيد الطلب.
+        </p>
+
+        <button type="submit" id="submitOrder">إرسال الطلب</button>
+        <p id="orderNotice" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <section class="card">
+      <div class="row">
+        <h2>📦 طلباتي</h2>
+        <button type="button" class="secondary" id="refresh">تحديث</button>
+      </div>
+      <p class="muted">تقدر تتابع حالة الطلب وتتواصل مع المسؤول من هنا.</p>
+      <div id="ordersList">جارٍ تحميل الطلبات...</div>
+    </section>
+  </section>
 </main>
 
-<footer>طلباتي — خدمة محلية لأهل ميت الشيوخ والقرى المجاورة ❤️</footer>
+<footer>طلباتي © خدمة محلية لتسهيل طلباتك وتوصيلها</footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const shops = document.getElementById('shops');
-let shopCount = 0;
+(() => {
+  "use strict";
 
-function addShop() {
-  shopCount++;
-  const section = document.createElement('section');
-  section.className = 'shop';
+  const SUPABASE_URL = "https://ttmgjnfcqswagmmzryhu.supabase.co";
+  const SUPABASE_KEY = "sb_publishable_quYaH7EB2IkqsyX0QhObrg_E0FwZJyE";
 
-  const heading = document.createElement('h3');
-  heading.textContent = 'طلب من محل رقم ' + shopCount;
-  section.appendChild(heading);
+  const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-  const fields = [
-    {label:'تفاصيل المشتريات', placeholder:'مثال: ٢ كارت شحن فودافون بـ١٥ جنيه', name:'items', required:true},
-    {label:'اسم المحل', placeholder:'اسم المحل اللي عايز تشتري منه', name:'shopName', required:true},
-    {label:'عنوان المحل', placeholder:'عنوان المحل أو أقرب علامة مميزة', name:'shopAddress', required:true}
-  ];
+  const $ = id => document.getElementById(id);
+  let currentUser = null;
+  let isAdmin = false;
+  let signupMode = false;
+  let cachedOrders = [];
 
-  fields.forEach(field => {
-    const label = document.createElement('label');
-    label.textContent = field.label;
-    const input = document.createElement(field.name === 'items' ? 'textarea' : 'input');
-    input.placeholder = field.placeholder;
-    input.dataset.field = field.name;
-    input.required = field.required;
-    section.appendChild(label);
-    section.appendChild(input);
-  });
+  const statuses = {
+    new: "طلب جديد",
+    reviewing: "جاري مراجعة الطلب",
+    negotiating: "جاري الاتفاق على السعر",
+    confirmed: "تم تأكيد الطلب",
+    delivered: "تم التوصيل",
+    cancelled: "تم إلغاء الطلب"
+  };
 
-  if (shopCount > 1) {
-    const remove = document.createElement('button');
-    remove.type = 'button';
-    remove.className = 'remove';
-    remove.textContent = 'حذف هذا المحل';
-    remove.addEventListener('click', () => section.remove());
-    section.appendChild(remove);
+  function escapeHTML(value) {
+    return String(value ?? "").replace(/[&<>"']/g, char => ({
+      "&":"&amp;", "<":"&lt;", ">":"&gt;",
+      '"':"&quot;", "'":"&#39;"
+    }[char]));
   }
 
-  shops.appendChild(section);
-}
+  function notice(id, message, kind = "") {
+    const el = $(id);
+    el.textContent = message;
+    el.className = kind;
+  }
 
-document.getElementById('addShop').addEventListener('click', addShop);
-document.getElementById('orderForm').addEventListener('submit', function(event) {
-  event.preventDefault();
-  alert('دي نسخة تجريبية من شكل الموقع فقط. الطلب لم يُرسل أو يُحفظ بعد. هنحتاج نربطه بخدمة آمنة قبل استقبال طلبات حقيقية.');
-});
+  function setBusy(button, busy, text) {
+    button.disabled = busy;
+    if (busy) {
+      button.dataset.oldText = button.textContent;
+      button.textContent = text || "لحظة من فضلك...";
+    } else if (button.dataset.oldText) {
+      button.textContent = button.dataset.oldText;
+      delete button.dataset.oldText;
+    }
+  }
 
-addShop();
+  function readableError(error) {
+    const msg = error?.message || "حصل خطأ غير معروف.";
+    if (/row-level security|permission denied|not allowed/i.test(msg)) {
+      return "قاعدة البيانات رفضت العملية بسبب الصلاحيات. هنراجع سياسات الأمان في Supabase.";
+    }
+    if (/invalid login credentials/i.test(msg)) {
+      return "الإيميل أو كلمة المرور غير صحيحة.";
+    }
+    if (/email not confirmed/i.test(msg)) {
+      return "لازم تأكد بريدك الإلكتروني من رسالة التفعيل أولًا.";
+    }
+    return msg;
+  }
+
+  function updateAuthMode() {
+    $("authTitle").textContent = signupMode ? "إنشاء حساب جديد" : "تسجيل الدخول";
+    $("authButton").textContent = signupMode ? "إنشاء الحساب" : "دخول";
+    $("toggleAuth").textContent = signupMode
+      ? "عندي حساب بالفعل"
+      : "إنشاء حساب جديد";
+    $("signupFields").classList.toggle("hidden", !signupMode);
+    $("password").autocomplete = signupMode ? "new-password" : "current-password";
+    notice("authNotice", "");
+  }
+
+  $("toggleAuth").addEventListener("click", () => {
+    signupMode = !signupMode;
+    updateAuthMode();
+  });
+
+  $("authButton").addEventListener("click", async () => {
+    const email = $("email").value.trim();
+    const password = $("password").value;
+    const username = $("username").value.trim();
+    const button = $("authButton");
+
+    if (!email || !password) {
+      notice("authNotice", "اكتب الإيميل وكلمة المرور.", "error");
+      return;
+    }
+    if (signupMode && (!username || username.length < 3)) {
+      notice("authNotice", "اسم المستخدم لازم يكون ٣ أحرف على الأقل.", "error");
+      return;
+    }
+    if (signupMode && password.length < 8) {
+      notice("authNotice", "اختار كلمة مرور من ٨ أحرف على الأقل.", "error");
+      return;
+    }
+
+    setBusy(button, true, "جارٍ التنفيذ...");
+    notice("authNotice", "");
+
+    try {
+      if (signupMode) {
+        const { data, error } = await db.auth.signUp({
+          email,
+          password,
+          options: { data: { username } }
+        });
+        if (error) throw error;
+
+        if (!data.session) {
+          notice("authNotice",
+            "تم إنشاء الحساب إذا كان الإيميل صالحًا. افتح بريدك الإلكتروني لتأكيد الحساب، وبعدها ارجع وسجّل دخولك.",
+            "success");
+        } else {
+          notice("authNotice", "تم إنشاء الحساب بنجاح.", "success");
+        }
+      } else {
+        const { error } = await db.auth.signInWithPassword({ email, password });
+        if (error) throw error;
+        notice("authNotice", "تم تسجيل الدخول.", "success");
+      }
+    } catch (error) {
+      notice("authNotice", readableError(error), "error");
+    } finally {
+      setBusy(button, false);
+    }
+  });
+
+  async function signOut() {
+    await db.auth.signOut();
+    currentUser = null;
+    isAdmin = false;
+    $("app").classList.add("hidden");
+    $("authCard").classList.remove("hidden");
+    $("resetButton").classList.add("hidden");
+    $("ordersList").textContent = "";
+  }
+
+  $("logout").addEventListener("click", signOut);
+  $("resetButton").addEventListener("click", signOut);
+
+  $("addShop").addEventListener("click", () => {
+    const div = document.createElement("div");
+    div.className = "shop";
+    div.innerHTML = `
+      <hr>
+      <button type="button" class="danger removeShop">حذف هذا المحل</button>
+      <label>تفاصيل الطلب من المحل</label>
+      <textarea class="items" required maxlength="3000"
+        placeholder="اكتب المنتجات والكميات والأسعار إن وجدت"></textarea>
+      <label>اسم المحل</label>
+      <input class="shopName" required maxlength="150" placeholder="اسم المحل">
+      <label>عنوان المحل</label>
+      <input class="shopAddress" required maxlength="300" placeholder="عنوان المحل">
+    `;
+    div.querySelector(".removeShop").addEventListener("click", () => div.remove());
+    $("shops").appendChild(div);
+  });
+
+  $("payment").addEventListener("change", () => {
+    $("paymentNote").textContent = $("payment").value === "vodafone"
+      ? "اختيار فودافون كاش لا يعني إتمام الدفع الآن. استنى تعليمات المسؤول وتأكيده للتحويل قبل اعتبار الطلب مدفوعًا."
+      : "هنتفق على السعر والتفاصيل في المحادثة الخاصة قبل تأكيد الطلب.";
+  });
+
+  $("orderForm").addEventListener("submit", async event => {
+    event.preventDefault();
+    if (!currentUser) {
+      notice("orderNotice", "سجّل دخولك الأول.", "error");
+      return;
+    }
+
+    const button = $("submitOrder");
+    setBusy(button, true, "جارٍ إرسال الطلب...");
+    notice("orderNotice", "");
+
+    try {
+      const shopSections = [...document.querySelectorAll("#shops .shop")];
+      const items = shopSections.map(section => ({
+        items_description: section.querySelector(".items").value.trim(),
+        shop_name: section.querySelector(".shopName").value.trim(),
+        shop_address: section.querySelector(".shopAddress").value.trim()
+      }));
+
+      if (!items.length || items.some(item =>
+        !item.items_description || !item.shop_name || !item.shop_address
+      )) {
+        throw new Error("كمّل تفاصيل الطلب واسم وعنوان كل محل.");
+      }
+
+      const { data: order, error: orderError } = await db
+        .from("orders")
+        .insert({
+          customer_id: currentUser.id,
+          delivery_address: $("deliveryAddress").value.trim(),
+          notes: $("notes").value.trim() || null,
+          payment_method: $("payment").value,
+          status: "new",
+          agreed_price: null
+        })
+        .select()
+        .single();
+
+      if (orderError) throw orderError;
+
+      const { error: itemsError } = await db
+        .from("order_items")
+        .insert(items.map(item => ({ ...item, order_id: order.id })));
+
+      if (itemsError) {
+        throw new Error("تم إنشاء الطلب، لكن تفاصيل المحلات لم تُحفظ. تواصل مع المسؤول وأرسل رقم الطلب: " + order.id);
+      }
+
+      $("orderForm").reset();
+      $("shops").innerHTML = `
+        <div class="shop">
+          <label>تفاصيل الطلب من المحل</label>
+          <textarea class="items" required maxlength="3000" placeholder="مثال: ٢ كارت شحن فودافون بـ١٥ جنيه"></textarea>
+          <label>اسم المحل</label>
+          <input class="shopName" required maxlength="150" placeholder="اسم المحل">
+          <label>عنوان المحل</label>
+          <input class="shopAddress" required maxlength="300" placeholder="عنوان المحل أو وصف مكانه">
+        </div>`;
+      notice("orderNotice", "تم إرسال طلبك بنجاح. تقدر تتابعه من قسم طلباتي.", "success");
+      await loadOrders();
+    } catch (error) {
+      notice("orderNotice", readableError(error), "error");
+    } finally {
+      setBusy(button, false);
+    }
+  });
+
+  async function loadOrders() {
+    if (!currentUser) return;
+    $("ordersList").textContent = "جارٍ تحميل الطلبات...";
+
+    try {
+      const { data: orders, error } = await db
+        .from("orders")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (error) throw error;
+      cachedOrders = orders || [];
+
+      if (!cachedOrders.length) {
+        $("ordersList").textContent = isAdmin
+          ? "لسه مفيش طلبات."
+          : "لسه ما عملتش طلبات.";
+        return;
+      }
+
+      const ids = cachedOrders.map(order => order.id);
+      const [itemsResult, messagesResult] = await Promise.all([
+        db.from("order_items").select("*").in("order_id", ids),
+        db.from("order_messages").select("*").in("order_id", ids)
+          .order("created_at", { ascending: true })
+      ]);
+
+      if (itemsResult.error) throw itemsResult.error;
+      if (messagesResult.error) throw messagesResult.error;
+
+      const itemsByOrder = {};
+      const messagesByOrder = {};
+      for (const item of (itemsResult.data || [])) {
+        (itemsByOrder[item.order_id] ||= []).push(item);
+      }
+      for (const msg of (messagesResult.data || [])) {
+        (messagesByOrder[msg.order_id] ||= []).push(msg);
+      }
+
+      $("ordersList").innerHTML = cachedOrders.map(order => {
+        const orderItems = itemsByOrder[order.id] || [];
+        const messages = messagesByOrder[order.id] || [];
+        const isMine = order.customer_id === currentUser.id;
+
+        return `
+          <article class="order">
+            <p><strong>رقم الطلب:</strong> ${escapeHTML(order.id.slice(0, 8))}</p>
+            <p><span class="status">${escapeHTML(statuses[order.status] || order.status)}</span></p>
+            <p><strong>تاريخ الطلب:</strong> ${escapeHTML(new Date(order.created_at).toLocaleString("ar-EG"))}</p>
+            ${isAdmin ? `<p><strong>معرّف العميل:</strong> ${escapeHTML(order.customer_id)}</p>` : ""}
+            <p><strong>عنوان التوصيل:</strong> ${escapeHTML(order.delivery_address)}</p>
+            <p><strong>الدفع:</strong> ${order.payment_method === "vodafone" ? "فودافون كاش" : "كاش"}</p>
+            ${order.notes ? `<p><strong>ملاحظات:</strong> ${escapeHTML(order.notes)}</p>` : ""}
+            <hr>
+            <strong>تفاصيل المحلات</strong>
+            ${orderItems.length ? orderItems.map(item => `
+              <div class="message">
+                <strong>${escapeHTML(item.shop_name)}</strong><br>
+                ${escapeHTML(item.items_description)}<br>
+                <span class="muted">العنوان: ${escapeHTML(item.shop_address)}</span>
+              </div>`).join("") : `<p class="muted">لا توجد تفاصيل محلات ظاهرة.</p>`}
+            <p><strong>السعر المتفق عليه:</strong>
+              ${order.agreed_price == null ? "لم يتم الاتفاق بعد" : escapeHTML(order.agreed_price) + " جنيه"}
+            </p>
+
+            ${isAdmin ? `
+              <label>حالة الطلب</label>
+              <select class="statusSelect" id="status-${escapeHTML(order.id)}">
+                ${Object.entries(statuses).map(([key,label]) =>
+                  `<option value="${key}" ${order.status === key ? "selected" : ""}>${label}</option>`
+                ).join("")}
+              </select>
+              <label>السعر المتفق عليه بالجنيه (اتركه فارغًا إذا لم تتفقوا)</label>
+              <input class="priceInput" id="price-${escapeHTML(order.id)}"
+                type="number" min="0" step="0.01"
+                value="${order.agreed_price == null ? "" : escapeHTML(order.agreed_price)}"
+                placeholder="السعر بعد الاتفاق">
+              <button type="button" class="saveOrder" data-id="${escapeHTML(order.id)}">حفظ الحالة والسعر</button>
+            ` : ""}
+
+            <hr>
+            <strong>المحادثة الخاصة</strong>
+            <div class="chatMessages">
+              ${messages.map(msg => `
+                <div class="message ${msg.sender_id === currentUser.id ? "mine" : ""}">
+                  <span class="muted">${msg.sender_id === currentUser.id ? "أنت" : "الطرف الآخر"}</span><br>
+                  ${escapeHTML(msg.message)}
+                  <div class="muted">${escapeHTML(new Date(msg.created_at).toLocaleString("ar-EG"))}</div>
+                </div>`).join("")}
+            </div>
+            <form class="chatForm" data-id="${escapeHTML(order.id)}">
+              <label>اكتب رسالة</label>
+              <textarea name="message" required maxlength="5000" placeholder="اتفق على تفاصيل الطلب هنا..."></textarea>
+              <button type="submit">إرسال الرسالة</button>
+            </form>
+          </article>`;
+      }).join("");
+
+      document.querySelectorAll(".chatForm").forEach(form => {
+        form.addEventListener("submit", sendMessage);
+      });
+      document.querySelectorAll(".saveOrder").forEach(button => {
+        button.addEventListener("click", saveOrder);
+      });
+
+    } catch (error) {
+      $("ordersList").innerHTML =
+        `<p class="error">تعذر تحميل الطلبات: ${escapeHTML(readableError(error))}</p>`;
+    }
+  }
+
+  async function sendMessage(event) {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const button = form.querySelector("button");
+    const orderId = form.dataset.id;
+    const message = new FormData(form).get("message").trim();
+
+    if (!message) return;
+    setBusy(button, true, "جارٍ الإرسال...");
+
+    try {
+      const { error } = await db.from("order_messages").insert({
+        order_id: orderId,
+        sender_id: currentUser.id,
+        message
+      });
+      if (error) throw error;
+      await loadOrders();
+    } catch (error) {
+      alert("لم تُرسل الرسالة: " + readableError(error));
+    } finally {
+      setBusy(button, false);
+    }
+  }
+
+  async function saveOrder(event) {
+    const button = event.currentTarget;
+    const id = button.dataset.id;
+    const status = $("status-" + id).value;
+    const rawPrice = $("price-" + id).value.trim();
+    const price = rawPrice === "" ? null : Number(rawPrice);
+
+    if (price !== null && (!Number.isFinite(price) || price < 0)) {
+      alert("اكتب سعرًا صحيحًا أو اترك الخانة فارغة.");
+      return;
+    }
+
+    setBusy(button, true, "جارٍ الحفظ...");
+    try {
+      const { error } = await db.from("orders")
+        .update({ status, agreed_price: price })
+        .eq("id", id);
+      if (error) throw error;
+      alert("تم حفظ التعديلات.");
+      await loadOrders();
+    } catch (error) {
+      alert("تعذر حفظ التعديلات: " + readableError(error));
+    } finally {
+      setBusy(button, false);
+    }
+  }
+
+  async function showApp(user) {
+    currentUser = user;
+    isAdmin = user.app_metadata?.role === "admin";
+
+    $("authCard").classList.add("hidden");
+    $("app").classList.remove("hidden");
+    $("welcome").textContent = user.user_metadata?.username || user.email || "حسابك";
+    $("newOrderCard").classList.toggle("hidden", isAdmin);
+    $("resetButton").classList.remove("hidden");
+
+    await loadOrders();
+  }
+
+  async function init() {
+    const { data, error } = await db.auth.getSession();
+    if (error) {
+      notice("authNotice", readableError(error), "error");
+      return;
+    }
+    if (data.session?.user) {
+      await showApp(data.session.user);
+    }
+
+    db.auth.onAuthStateChange((event, session) => {
+      setTimeout(async () => {
+        if (session?.user) {
+          await showApp(session.user);
+        } else {
+          currentUser = null;
+          isAdmin = false;
+          $("app").classList.add("hidden");
+          $("authCard").classList.remove("hidden");
+        }
+      }, 0);
+    });
+  }
+
+  $("refresh").addEventListener("click", loadOrders);
+  init();
+})();
 </script>
 </body>
 </html>
+
